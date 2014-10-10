@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>Engines Ready: 0 to Ruby Dev on OSX 10.9 (Mavericks)</title>
+    <meta name="description" content="" />
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="../favicon.ico">
+
+    <link rel="stylesheet" type="text/css" href="../assets/css/screen.css?v=ab36e52ee3" />
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=PT+Serif:400,700,400italic|Open+Sans:700,400" />
+
+    <meta name="generator" content="Ghost 0.5" />
+<link rel="alternate" type="application/rss+xml" title="Constant Growth" href="../rss/index.html">
+<link rel="canonical" href="http://my-ghost-blog.com/engines-ready-0-to-dev-on-osx-10-9-mavericks/" />
+</head>
+<body class="post-template">
+
+    
+
+<nav class="main-nav clearfix">
+    <a class="back-button icon-arrow-left" href="http://my-ghost-blog.com">Home</a>
+    <a class="subscribe-button icon-feed" href="http://my-ghost-blog.com/rss/">Subscribe</a>
+</nav>
+
+<main class="content" role="main">
+
+    <article class="post">
+
+        <header class="post-header">
+            <h1 class="post-title">Engines Ready: 0 to Ruby Dev on OSX 10.9 (Mavericks)</h1>
+            <section class="post-meta">
+                <time class="post-date" datetime="2014-09-17">17 September 2014</time> 
+            </section>
+        </header>
+
+        <section class="post-content">
+            <p>Step one for building software is having all the necessary kibbles and bits installed. Sadly, this step trips many newcomers up. Documentation is spread all over and many sources are out of date or otherwise unusable for a new developer. </p>
+
+<p>I hope to keep this up-to-date as a simple walkthrough for how I set new machines up. Hopefully it can help someone else out, too.</p>
+
+<p>We'll be installing all the following software on a fresh &amp; clean OSX Mavericks format:</p>
+
+<ul>
+<li>XCode</li>
+<li>Homebrew</li>
+<li>Git</li>
+<li>RVM</li>
+</ul>
+
+<p>If you have trouble, either with an installation or with following along, <a href="http://twitter.com/ADotMartin">drop me a line</a>!</p>
+
+<h3 id="xcode">XCode</h3>
+
+<p><a href="https://developer.apple.com/xcode/">XCode</a> is a massive package from Apple including commonly-used libraries and an IDE for iOS &amp; OSX development. The IDE isn't necessary unless you're planning on building iOS apps or Mac desktop apps, but many of the libraries are mandatory for development. Thakfully, Apple released the XCode Command Line Tools package to allow developers without the need for their XCode IDE to get the packages they need. </p>
+
+<p>A lot of people will have XCode installed without even knowing it. If you're not on a fresh install, run the following command in your terminal:</p>
+
+<pre><code>$ xcode-select -p
+</code></pre>
+
+<p>If you see anything other than a filepath (like <code>/Library/Developer/CommandLineTools/</code>), you need to install XCode. </p>
+
+<p>Apple was also nice enough to create an automated installer for the XCode CLT. If you try to run any command that needs XCode (try <code>git</code>) and it's not installed, you'll see the following prompt:</p>
+
+<p><img src="../content/images/2014/Sep/xcode-prompt-1.png" alt="XCode Prompt" /></p>
+
+<p>If you think you'll be doing Apple-specific development in the near future (ie: iPhone, iPad, Mac native apps), click on the "Get XCode" button to get the full package. WARNING - it's big. If you're planning on doing web development, or just want a quicker setup experience, click on the "Install" button. You'll have to except an EULA, and then XCode will do its thing and install its command line tools on your machine.</p>
+
+<p>Of course, if this has all been too much for you already, you can click "Not Now". XCode will still be here when you're done on Facebook.</p>
+
+<h3 id="homebrew">Homebrew</h3>
+
+<p><a href="http://brew.sh">Homebrew</a> is a package manager for OSX, and provides similar functionality to <code>apt-get</code> or <code>yum</code> on Linux systems. It maintains a library of commonly-sought applications accesible by shortcut names and makes it a breeze to install, upgrade and remove them as desired. It's not necessary, but it's SUPER helpful! You'll get quickly tired of looking up download repositories without it.</p>
+
+<p>To install, open a new terminal and run the following command:</p>
+
+<pre><code>$ ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+</code></pre>
+
+<p>This pulls the Homebrew install script from their GitHub and runs it using Ruby on your machine. Thankfully, a Ruby build is installed by default on newer versions of OSX! </p>
+
+<p>Homebrew will take a few minutes to install and may require you to enter your password or monitor another installation. Be patient, and when it's done, type:</p>
+
+<pre><code>$ brew doctor
+</code></pre>
+
+<p>This is a helpful utility that will check your Homebrew setup to make sure everything's smooth. If you get any response other than <code>Your system is ready to brew</code>, check <a href="../homebrew-your-path.1">this post</a> out to see a quick fix for the most common Homebrew error. If that's not the fix for you, head to Google with your warning text in hand.</p>
+
+<h3 id="git">Git</h3>
+
+<p>Now that we have Homebrew, life's a breeze! To install the latest version of <a href="http://git-scm.com">Git</a>, simply run:</p>
+
+<pre><code>$ brew install git
+</code></pre>
+
+<p>Wait a minute for Homebrew to work its magic and then ensure your Git installed correctly with</p>
+
+<pre><code>$ git --version
+</code></pre>
+
+<p>You should get a reply of <code>git version 2.1.0</code> or later.</p>
+
+<p>NOTE: If your git version shows as lower than <code>2.1.0</code>, take a look at my <a href="../homebrew-your-path.1">Homebrew &amp; your PATH</a> post.</p>
+
+<h3 id="rvm">RVM</h3>
+
+<p><a href="http://rvm.io">Ruby Version Manager</a> is an invaluable utility for managing Ruby &amp; Rails installations. For a hobbyist it's a good way to make sure your Ruby &amp; Rails stays up to date. For serious development, it lets you test your apps against older versions of Ruby and lets your create custom environments to test in so you don't ruin your production app with sandbox code.</p>
+
+<p>To install RVM (and the latest Ruby &amp; Rails versions), run the following commands:</p>
+
+<pre><code> $ curl -sSL https://get.rvm.io | bash -s stable --rails --autolibs=homebrew
+</code></pre>
+
+<p>When installation finishes, RVM will ask you to run another command, something like:</p>
+
+<pre><code>$ source /Users/yourname/.rvm/scripts/rvm
+</code></pre>
+
+<p><strong>MAKE SURE YOU DO THIS</strong>. This will add RVM to your PATH so you can use it from your terminal. </p>
+
+<p>After both your installation and the secondary script have run, close your current Terminal instance, restart Terminal, and try both <code>ruby -v</code> and <code>rails -v</code>. Your versions should be <code>2.1.2</code> and <code>4.1.6</code> or greater.</p>
+
+<h3 id="readyforbattle">Ready for Battle!</h3>
+
+<p>With these pieces in place, my computer's a lean mean coding machine! To finalize, I'll install a graphical text editor (I recommend <a href="http://www.sublimetext.com">Sublime Text</a> or <a href="https://atom.io">Atom</a>) and Google's Chrome browser for debugging. I'll also add my dotfiles to make things a little prettier - I'll share some prompt setup tips later on. </p>
+
+<h4 id="didthishelpyoudidimucksomethingupletmeknowatadotmartinhttpstwittercomadotmartin">Did this help you? Did I muck something up? Let me know at <a href="https://twitter.com/ADotMartin">@ADotMartin</a> !</h4>
+        </section>
+
+        <footer class="post-footer">
+
+
+            <figure class="author-image">
+                <a class="img" href="../author/alex-martin/index.html" style="background-image: url(http://www.gravatar.com/avatar/069ec845bb230e1f3da804446fd52806?d=404&amp;s=250)"><span class="hidden">Alex Martin's Picture</span></a>
+            </figure>
+
+            <section class="author">
+                <h4><a href="../author/alex-martin/index.html">Alex Martin</a></h4>
+
+                    <p>Read <a href="../author/alex-martin/index.html">more posts</a> by this author.</p>
+                <div class="author-meta">
+                    <span class="author-location icon-location">US</span>
+                    
+                </div>
+            </section>
+
+
+            <section class="share">
+                <h4>Share this post</h4>
+                <a class="icon-twitter" href="https://twitter.com/share?text=Engines%20Ready%3A%200%20to%20Ruby%20Dev%20on%20OSX%2010.9%20(Mavericks)&amp;url=http://my-ghost-blog.com/engines-ready-0-to-dev-on-osx-10-9-mavericks/"
+                    onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http://my-ghost-blog.com/engines-ready-0-to-dev-on-osx-10-9-mavericks/"
+                    onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=http://my-ghost-blog.com/engines-ready-0-to-dev-on-osx-10-9-mavericks/"
+                   onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+
+        </footer>
+
+    </article>
+
+</main>
+
+
+    <footer class="site-footer clearfix">
+         <section class="copyright"><a href="http://my-ghost-blog.com">Constant Growth</a> &copy; 2014</section>
+         <section class="poweredby">Proudly published with <a href="https://ghost.org">Ghost</a></section>
+    </footer>
+
+    <script src="../public/jquery.min.js?v=ab36e52ee3"></script>
+
+    <script type="text/javascript" src="../assets/js/jquery.fitvids.js?v=ab36e52ee3"></script>
+    <script type="text/javascript" src="../assets/js/index.js?v=ab36e52ee3"></script>
+
+</body>
+</html>
