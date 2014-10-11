@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Alex Martin - Constant Growth]]></title><description><![CDATA[Digital Adventures]]></description><link>http://blog.atmartin.io/</link><generator>Ghost 0.5</generator><lastBuildDate>Sat, 11 Oct 2014 03:45:49 GMT</lastBuildDate><atom:link href="http://blog.atmartin.io/author/alex-martin/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Homebrew & your PATH]]></title><description><![CDATA[<p><em>This is an addendum to my <a href="">previous post</a> addressing the most common error I see with new <a href='http://brew.sh/' >Homebrew</a> installations.</em></p>
+
+<p>Try something with me: type <code>echo $PATH</code> into your terminal and press enter. See all that mess that comes out? That's your <code>PATH</code>: a list of directories that your terminal expects to contain any command you might ever use. If you're a more file-oriented person, you can find your operating system's default PATH implementation by opening <code>/etc/paths</code> with your favorite text editor (careful - don't edit it!). </p>
+
+<p>When you submit a command, say <code>git --version</code>, your computer searches each of those directories in the order they're listed until it finds a program called <code>git</code>. It then asks <code>git</code> what to do with <code>--version</code>. <code>git</code> will take whatever it's handed by the OS, process it, and return its output to your terminal for you to do with as you please.</p>
+
+<p>This can cause an issue when you have multiple versions of software on your system. Imagine you have two versions of Git and your PATH looks like this: <code>/old/git:/new/git</code>. No matter how often you update that <code>/new/git</code>, the <code>/old/git</code> will always be used since it shows up first. </p>
+
+<p>The common way to fix this is by appending newer directories to the front of your PATH, like this:  </p>
+
+<pre><code>    export PATH="/new/dir/route:$PATH"
+</code></pre>
+
+<p>This sets your PATH as equal to the new directory followed by your original PATH list. </p>
+
+<p>The first time you run <code>brew doctor</code>, you'll probably see an error regarding <code>/usr/bin</code> &amp; your PATH. If you see this error, run the following command in your terminal:  </p>
+
+<pre><code>    'export PATH="/usr/local/bin:$PATH"' &gt;&gt; ~/.bash_profile &amp;&amp; source ~/.bash_profile
+</code></pre>
+
+<p>This will ensure your terminal checks Homebrew's installed &amp; updated apps before it checks an older &amp; possibly outdated folder. </p>
+
+<p>This directive is written to the <code>.bash_profile</code> file in your home directory. If you need to remove it later, open <code>~/.bash_profile</code> and delete the command. <strong>Do be careful</strong> - your profile will probably contain lots of other nuts &amp; bolts and if you're using this tutorial you may not yet know what it all means. </p>
+
+<p><em>If you're a purist regarding your PATH, or if you need support for the older XCode versions of certain programs, take a look at <a href='http://superuser.com/questions/324616/how-should-i-set-the-path-variable-on-my-mac-so-the-hombrew-installed-tools-are/580611' #580611">this answer on SuperUser</a>. This is a much more complicated solution than I need, but it may help you if defaulting to Homebrew's versions causes issues on your system.</em></p>
+
+<h4 id="letmeknowifthisdoesnthelpclearupyourpathwarningsadotmartinhttpstwittercomadotmartin">Let me know if this doesn't help clear up your PATH warnings! <a href='https://twitter.com/ADotMartin' >@ADotMartin</a></h4>]]></description><link>http://blog.atmartin.io/homebrew-your-path/</link><guid isPermaLink="false">b96d5cb8-9f1e-4f0e-99af-c4bd8a12bcc8</guid><dc:creator><![CDATA[Alex Martin]]></dc:creator><pubDate>Thu, 09 Oct 2014 16:53:37 GMT</pubDate></item><item><title><![CDATA[Engines Ready: 0 to Ruby Dev on OSX 10.9 (Mavericks)]]></title><description><![CDATA[<p>Step one for building software is having all the necessary kibbles and bits installed. Sadly, this step trips many newcomers up. Documentation is spread all over and many sources are out of date or otherwise unusable for a new developer. </p>
+
+<p>I hope to keep this up-to-date as a simple walkthrough for how I set new machines up. Hopefully it can help someone else out, too.</p>
+
+<p>We'll be installing all the following software on a fresh &amp; clean OSX Mavericks format:</p>
+
+<ul>
+<li>XCode</li>
+<li>Homebrew</li>
+<li>Git</li>
+<li>RVM</li>
+</ul>
+
+<p>If you have trouble, either with an installation or with following along, <a href='http://twitter.com/ADotMartin' >drop me a line</a>!</p>
+
+<h3 id="xcode">XCode</h3>
+
+<p><a href='https://developer.apple.com/xcode/' >XCode</a> is a massive package from Apple including commonly-used libraries and an IDE for iOS &amp; OSX development. The IDE isn't necessary unless you're planning on building iOS apps or Mac desktop apps, but many of the libraries are mandatory for development. Thakfully, Apple released the XCode Command Line Tools package to allow developers without the need for their XCode IDE to get the packages they need. </p>
+
+<p>A lot of people will have XCode installed without even knowing it. If you're not on a fresh install, run the following command in your terminal:</p>
+
+<pre><code>$ xcode-select -p
+</code></pre>
+
+<p>If you see anything other than a filepath (like <code>/Library/Developer/CommandLineTools/</code>), you need to install XCode. </p>
+
+<p>Apple was also nice enough to create an automated installer for the XCode CLT. If you try to run any command that needs XCode (try <code>git</code>) and it's not installed, you'll see the following prompt:</p>
+
+<p><img src='http://blog.atmartin.io/content/images/2014/Sep/xcode-prompt-1.png'  alt="XCode Prompt" /></p>
+
+<p>If you think you'll be doing Apple-specific development in the near future (ie: iPhone, iPad, Mac native apps), click on the "Get XCode" button to get the full package. WARNING - it's big. If you're planning on doing web development, or just want a quicker setup experience, click on the "Install" button. You'll have to except an EULA, and then XCode will do its thing and install its command line tools on your machine.</p>
+
+<p>Of course, if this has all been too much for you already, you can click "Not Now". XCode will still be here when you're done on Facebook.</p>
+
+<h3 id="homebrew">Homebrew</h3>
+
+<p><a href='http://brew.sh/' >Homebrew</a> is a package manager for OSX, and provides similar functionality to <code>apt-get</code> or <code>yum</code> on Linux systems. It maintains a library of commonly-sought applications accesible by shortcut names and makes it a breeze to install, upgrade and remove them as desired. It's not necessary, but it's SUPER helpful! You'll get quickly tired of looking up download repositories without it.</p>
+
+<p>To install, open a new terminal and run the following command:</p>
+
+<pre><code>$ ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+</code></pre>
+
+<p>This pulls the Homebrew install script from their GitHub and runs it using Ruby on your machine. Thankfully, a Ruby build is installed by default on newer versions of OSX! </p>
+
+<p>Homebrew will take a few minutes to install and may require you to enter your password or monitor another installation. Be patient, and when it's done, type:</p>
+
+<pre><code>$ brew doctor
+</code></pre>
+
+<p>This is a helpful utility that will check your Homebrew setup to make sure everything's smooth. If you get any response other than <code>Your system is ready to brew</code>, check <a href='http://blog.atmartin.io/homebrew-your-path' >this post</a> out to see a quick fix for the most common Homebrew error. If that's not the fix for you, head to Google with your warning text in hand.</p>
+
+<h3 id="git">Git</h3>
+
+<p>Now that we have Homebrew, life's a breeze! To install the latest version of <a href='http://git-scm.com/' >Git</a>, simply run:</p>
+
+<pre><code>$ brew install git
+</code></pre>
+
+<p>Wait a minute for Homebrew to work its magic and then ensure your Git installed correctly with</p>
+
+<pre><code>$ git --version
+</code></pre>
+
+<p>You should get a reply of <code>git version 2.1.0</code> or later.</p>
+
+<p>NOTE: If your git version shows as lower than <code>2.1.0</code>, take a look at my <a href='http://blog.atmartin.io/homebrew-your-path' >Homebrew &amp; your PATH</a> post.</p>
+
+<h3 id="rvm">RVM</h3>
+
+<p><a href='http://rvm.io/' >Ruby Version Manager</a> is an invaluable utility for managing Ruby &amp; Rails installations. For a hobbyist it's a good way to make sure your Ruby &amp; Rails stays up to date. For serious development, it lets you test your apps against older versions of Ruby and lets your create custom environments to test in so you don't ruin your production app with sandbox code.</p>
+
+<p>To install RVM (and the latest Ruby &amp; Rails versions), run the following commands:</p>
+
+<pre><code> $ curl -sSL https://get.rvm.io | bash -s stable --rails --autolibs=homebrew
+</code></pre>
+
+<p>When installation finishes, RVM will ask you to run another command, something like:</p>
+
+<pre><code>$ source /Users/yourname/.rvm/scripts/rvm
+</code></pre>
+
+<p><strong>MAKE SURE YOU DO THIS</strong>. This will add RVM to your PATH so you can use it from your terminal. </p>
+
+<p>After both your installation and the secondary script have run, close your current Terminal instance, restart Terminal, and try both <code>ruby -v</code> and <code>rails -v</code>. Your versions should be <code>2.1.2</code> and <code>4.1.6</code> or greater.</p>
+
+<h3 id="readyforbattle">Ready for Battle!</h3>
+
+<p>With these pieces in place, my computer's a lean mean coding machine! To finalize, I'll install a graphical text editor (I recommend <a href='http://www.sublimetext.com/' >Sublime Text</a> or <a href='https://atom.io/' >Atom</a>) and Google's Chrome browser for debugging. I'll also add my dotfiles to make things a little prettier - I'll share some prompt setup tips later on. </p>
+
+<h4 id="didthishelpyoudidimucksomethingupletmeknowatadotmartinhttpstwittercomadotmartin">Did this help you? Did I muck something up? Let me know at <a href='https://twitter.com/ADotMartin' >@ADotMartin</a> !</h4>]]></description><link>http://blog.atmartin.io/engines-ready-0-to-dev-on-osx-10-9-mavericks/</link><guid isPermaLink="false">a4b3d470-2e31-4337-a1cf-0700e365d9a3</guid><dc:creator><![CDATA[Alex Martin]]></dc:creator><pubDate>Wed, 17 Sep 2014 17:29:13 GMT</pubDate></item><item><title><![CDATA[Foreword]]></title><description><![CDATA[<h4 id="hiimalexsometimeslexandiwanttobuildsoftware">Hi. I'm Alex (sometimes Lex) and I want to build software.</h4>
+
+<p>I grew up in a tech-centric family. My parents were both educators but my dad moved into tech administration early on in his career and my mom became the de-facto "computer person" at every school she taught at. Their combined experience and knowledge rubbed off on me, and from my first green-screen Apple to my slew of gadgets today I've been breaking things to get a better idea of how they work. </p>
+
+<p>I've set for myself the goal of <em>being proficient at developing simple software from scratch</em>. I say "simple" because I don't believe complexity defines quality. I say "scratch" because I don't believe <code>rails generate scaffold Blog</code> makes you an engineer. </p>
+
+<p>I've lurked in the development ecosystem most of my life but I know it's important for me to become more active. I want to contirubte but I need both the chops and the confidence to do so. I'm starting this blog to, in part, make myself more accountable. </p>
+
+<p>I hope to share some of my projects, both completed and in-progress, here, as well as any nifty discoveries I make while learning.</p>
+
+<h4 id="youcanfollowmeatadotmartinhttptwittercomadotmartinorforkmeongithubatatmartinhttpgithubcomatmartin">You can follow me at <a href='http://twitter.com/ADotMartin' >@ADotMartin</a> or fork me on GitHub at <a href='http://github.com/ATMartin' >ATMartin</a>.</h4>]]></description><link>http://blog.atmartin.io/foreword/</link><guid isPermaLink="false">3b2fddc1-655d-46cf-895c-57db4be3e24f</guid><dc:creator><![CDATA[Alex Martin]]></dc:creator><pubDate>Tue, 16 Sep 2014 01:18:40 GMT</pubDate></item></channel></rss>
