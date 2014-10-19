@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>Overthinking It</title>
+    <meta name="description" content="" />
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="../favicon.ico">
+
+    <link rel="stylesheet" type="text/css" href="../assets/css/screen.css?v=e8efd7df87" />
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=PT+Serif:400,700,400italic|Open+Sans:700,400" />
+
+    <meta name="generator" content="Ghost 0.5" />
+<link rel="alternate" type="application/rss+xml" title="Constant Growth" href="../rss/index.html">
+<link rel="canonical" href="http://blog.atmartin.io/overthinking-it/" />
+</head>
+<body class="post-template">
+
+    
+
+<nav class="main-nav clearfix">
+    <a class="back-button icon-arrow-left" href="http://blog.atmartin.io">Home</a>
+    <a class="subscribe-button icon-feed" href="http://blog.atmartin.io/rss/">Subscribe</a>
+</nav>
+
+<main class="content" role="main">
+
+    <article class="post">
+
+        <header class="post-header">
+            <h1 class="post-title">Overthinking It</h1>
+            <section class="post-meta">
+                <time class="post-date" datetime="2014-10-18">18 October 2014</time> 
+            </section>
+        </header>
+
+        <section class="post-content">
+            <p><em>I have a bit of a problem with overthinking my problems.</em></p>
+
+<p>I've been working on <a href="https://github.com/ATMartin/node-buster">Node-Buster</a> for a week or so now, and I found an elegant fix togday I'm particularly proud/embarassed to share. </p>
+
+<p>I want to be able to save sites/blogs/repositories in the app. Obviously I'm violating the good ol' <a href="http://c2.com/cgi/wiki?YouArentGonnaNeedIt">YAGNI</a> principle here, but it's a feature I'd really like, and it's my app. Obviously, to persist these repos between app launches I'm going to need a datastore. Here's where my issue comes in: I think waaay too big. </p>
+
+<p>I first started with SQL. I thought about getting Postgres running, but decided that a full-fledged DBMS would definitely be too large for this project. So then I moved to SQLite. I like SQLite and have used it in the past for small PHP test projects, but I've never used it on anything I'd actually put into production. I spent a couple days researching SQLite &amp; NodeJS interaction layers and found quite a few appealing ones. However, after those couple days I decided SQLite was more work than I wanted to put into this and I dropped it in favor of my next idea: YAML. </p>
+
+<p>I haven't done a lot with <a href="http://www.yaml.org/">YAML</a>, but I edited the occasional Minecraft data file using YAML and though it might be a simple way to store a persistent backend for my app. I found a great interaction layer for Node (<a href="https://github.com/jeremyfa/yaml.js">yaml.js</a>) and got it hammered into Node-Buster. Everything was going great - I had overcome the issue and felt like a true problem solver! </p>
+
+<p>It was over a day later when I realized my oversight. Let's see if you can spot it: </p>
+
+<p>My workflow in the app is to store repos as Javascript objects inside an array. All editing and changes are made to the array in memory while the app runs. When changes are done, the app converts the JS object into Yaml, then writes it out to a .yaml file. When the app reopens and a request is made using the stored data, the app reads the .yaml file, converts it to a JS object, and loads it into a variable so it can be worked with. Rinse, repeat, ad nauseum. </p>
+
+<p>See the issue here? I don't need Yaml. Javascript / Node provides a fantastic way to write out Javascript objects without any intermediary formatting or conversions. </p>
+
+<p><strong>It's called JSON.</strong></p>
+
+<p>I can write my objects directly out the .json files using Node's built-in JSON library. I can read/write files using Node's built-in FileSystem library. I don't need Yaml at all. It's just a middle-man that makes me feel like I'm doing things the "right" way. </p>
+
+<p>Whoops! </p>
+
+<p>I both love and hate the feeling I get when I face challenges like this. On one hand, I'm my greatest critic. I belittle myself for missing something that seems so obvious in retrospect, and that belittleing can often lead me to abandon a small project altogether because I come face to face with my own <a href="http://en.wikipedia.org/wiki/Impostor_syndrome">Impostor Syndrome</a>. On the other hand, it's incredibly rewarding to find a simpler solution to an issue, and it makes me feel good that I'm getting advanced enough to see these kinds of mistakes. I know about myself that I tend to overthink things, but knowing is only half the battle - the other half is being aware of it and correcting it ahead of time. I tend to lose that second half. </p>
+
+<p>Here's to hoping that sharing can help me get a little better about it.</p>
+        </section>
+
+        <footer class="post-footer">
+
+
+            <figure class="author-image">
+                <a class="img" href="../author/alex-martin/index.html" style="background-image: url(http://www.gravatar.com/avatar/069ec845bb230e1f3da804446fd52806?d=404&amp;s=250)"><span class="hidden">Alex Martin's Picture</span></a>
+            </figure>
+
+            <section class="author">
+                <h4><a href="../author/alex-martin/index.html">Alex Martin</a></h4>
+
+                    <p>Read <a href="../author/alex-martin/index.html">more posts</a> by this author.</p>
+                <div class="author-meta">
+                    <span class="author-location icon-location">US</span>
+                    
+                </div>
+            </section>
+
+
+            <section class="share">
+                <h4>Share this post</h4>
+                <a class="icon-twitter" href="https://twitter.com/share?text=Overthinking%20It&amp;url=http://blog.atmartin.io/overthinking-it/"
+                    onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.atmartin.io/overthinking-it/"
+                    onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=http://blog.atmartin.io/overthinking-it/"
+                   onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+
+        </footer>
+
+    </article>
+
+</main>
+
+
+    <footer class="site-footer clearfix">
+         <section class="copyright"><a href="http://blog.atmartin.io">Constant Growth</a> &copy; 2014</section>
+         <section class="poweredby">Proudly published with <a href="https://ghost.org">Ghost</a></section>
+    </footer>
+
+    <script src="../public/jquery.min.js?v=e8efd7df87"></script>
+
+    <script type="text/javascript" src="../assets/js/jquery.fitvids.js?v=e8efd7df87"></script>
+    <script type="text/javascript" src="../assets/js/index.js?v=e8efd7df87"></script>
+
+</body>
+</html>

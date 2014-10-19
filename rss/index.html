@@ -1,7 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Constant Growth]]></title><description><![CDATA[Digital Adventures]]></description><link>http://blog.atmartin.io/</link><generator>Ghost 0.5</generator><lastBuildDate>Sat, 11 Oct 2014 17:15:54 GMT</lastBuildDate><atom:link href="http://blog.atmartin.io/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Test Post]]></title><description><![CDATA[<h3 id="thisisatestofmynodejsstaticsitegeneratordisregardthispost">This is a test of my NodeJS static site generator. Disregard this post!</h3>
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Constant Growth]]></title><description><![CDATA[Digital Adventures]]></description><link>http://blog.atmartin.io/</link><generator>Ghost 0.5</generator><lastBuildDate>Sun, 19 Oct 2014 02:56:44 GMT</lastBuildDate><atom:link href="http://blog.atmartin.io/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Overthinking It]]></title><description><![CDATA[<p><em>I have a bit of a problem with overthinking my problems.</em></p>
 
-<p><em>alex</em></p>]]></description><link>http://blog.atmartin.io/test-post/</link><guid isPermaLink="false">ccd2a12c-ac58-45f5-b82e-7fe4c051a515</guid><dc:creator><![CDATA[Alex Martin]]></dc:creator><pubDate>Sat, 11 Oct 2014 17:02:13 GMT</pubDate></item><item><title><![CDATA[Homebrew & your PATH]]></title><description><![CDATA[<p><em>This is an addendum to my <a href="">previous post</a> addressing the most common error I see with new <a href='http://brew.sh/' >Homebrew</a> installations.</em></p>
+<p>I've been working on <a href='https://github.com/ATMartin/node-buster' >Node-Buster</a> for a week or so now, and I found an elegant fix togday I'm particularly proud/embarassed to share. </p>
+
+<p>I want to be able to save sites/blogs/repositories in the app. Obviously I'm violating the good ol' <a href='http://c2.com/cgi/wiki?YouArentGonnaNeedIt' >YAGNI</a> principle here, but it's a feature I'd really like, and it's my app. Obviously, to persist these repos between app launches I'm going to need a datastore. Here's where my issue comes in: I think waaay too big. </p>
+
+<p>I first started with SQL. I thought about getting Postgres running, but decided that a full-fledged DBMS would definitely be too large for this project. So then I moved to SQLite. I like SQLite and have used it in the past for small PHP test projects, but I've never used it on anything I'd actually put into production. I spent a couple days researching SQLite &amp; NodeJS interaction layers and found quite a few appealing ones. However, after those couple days I decided SQLite was more work than I wanted to put into this and I dropped it in favor of my next idea: YAML. </p>
+
+<p>I haven't done a lot with <a href='http://www.yaml.org/' >YAML</a>, but I edited the occasional Minecraft data file using YAML and though it might be a simple way to store a persistent backend for my app. I found a great interaction layer for Node (<a href='https://github.com/jeremyfa/yaml.js' >yaml.js</a>) and got it hammered into Node-Buster. Everything was going great - I had overcome the issue and felt like a true problem solver! </p>
+
+<p>It was over a day later when I realized my oversight. Let's see if you can spot it: </p>
+
+<p>My workflow in the app is to store repos as Javascript objects inside an array. All editing and changes are made to the array in memory while the app runs. When changes are done, the app converts the JS object into Yaml, then writes it out to a .yaml file. When the app reopens and a request is made using the stored data, the app reads the .yaml file, converts it to a JS object, and loads it into a variable so it can be worked with. Rinse, repeat, ad nauseum. </p>
+
+<p>See the issue here? I don't need Yaml. Javascript / Node provides a fantastic way to write out Javascript objects without any intermediary formatting or conversions. </p>
+
+<p><strong>It's called JSON.</strong></p>
+
+<p>I can write my objects directly out the .json files using Node's built-in JSON library. I can read/write files using Node's built-in FileSystem library. I don't need Yaml at all. It's just a middle-man that makes me feel like I'm doing things the "right" way. </p>
+
+<p>Whoops! </p>
+
+<p>I both love and hate the feeling I get when I face challenges like this. On one hand, I'm my greatest critic. I belittle myself for missing something that seems so obvious in retrospect, and that belittleing can often lead me to abandon a small project altogether because I come face to face with my own <a href='http://en.wikipedia.org/wiki/Impostor_syndrome' >Impostor Syndrome</a>. On the other hand, it's incredibly rewarding to find a simpler solution to an issue, and it makes me feel good that I'm getting advanced enough to see these kinds of mistakes. I know about myself that I tend to overthink things, but knowing is only half the battle - the other half is being aware of it and correcting it ahead of time. I tend to lose that second half. </p>
+
+<p>Here's to hoping that sharing can help me get a little better about it.</p>]]></description><link>http://blog.atmartin.io/overthinking-it/</link><guid isPermaLink="false">c2fe739b-6059-4e80-85e3-dcffa20f99b3</guid><dc:creator><![CDATA[Alex Martin]]></dc:creator><pubDate>Sat, 18 Oct 2014 20:57:54 GMT</pubDate></item><item><title><![CDATA[We need blog posts, stat(ic)!]]></title><description><![CDATA[<p>I started this blog and found that, while my host <a href='http://www.digitalocean.com/' >DigitalOcean</a> is rock-solid, having a live blog creates a whole mess of concerns about security and maintenance. I decided to do some research to see what kinds of ecosystems other bloggers put themselves in to obscure all the mess of server management. In searching for a better solution I stumbled down the "static blog generator" rabbit hole. </p>
+
+<h4 id="jekyll">Jekyll</h4>
+
+<p>First, I found <a href='http://jekyllrb.com/' >Jekyll</a>. Jekyll is a blog generator with direct integration into Github. This means you run Jekyll (probably locally, but maybe on a server), blog on it there, and then compile the pages into static files that get pushed to your GitHub. Jekyll's nice because your GitHub repo contains not only the static representations of your site but also the files Jekyll needs to work. That means you can clone your repo to any other machine with Jekyll installed and run it locally to add a new blog post or edit your templates. </p>
+
+<p>Jekyll's popular, well-supported and integrates seamelssly with GitHub. What reasons do I have not to use it? Primarily - <em>I don't want to</em>. I wish I had a better reason, but I have a strong feeling about Ghost, and I trust my gut. Especially while I'm getting started and fighting to motivate myself to blog, I want to remain in the environment that I've enjoyed. </p>
+
+<h4 id="buster">Buster</h4>
+
+<p>So Jekyll's out for now. My continued searching brought me to an app called <a href='https://github.com/axitkhurana/buster' >Buster</a>. Buster is a little app, written in Python, that takes the URL of your Ghost blog and converts it into static pages (hence, "Ghost" + "Buster". Get it? I was impressed). It gets rave reviews from its users and certainly seems to work well. Using Buster I was able to copy my blog from DigitalOcean over to a Github Pages site in about 5 minutes. </p>
+
+<p>So Buster works fast, lets me keep using Ghost, and is easy to hack on. It would seem I've found my solution, right? Nope. I'm a nerd, and a textbook overthinker, and both of these facts played into me deciding that I don't want to use Buster because it's written in Python. What's wrong with Python? Not a thing. But Ghost is based on NodeJS, and since I like Javascript, I decided I could do one better than Buster.</p>
+
+<h4 id="nodebuster">Node-Buster</h4>
+
+<p>I started writing Node-Buster as a learning opportunity. I'm not a Python guru or anything but it's idiomatic enough for me to identify what Buster's doing and hack that functionality into a NodeJS app. </p>
+
+<p><a href='https://github.com/ATMartin/node-buster' >Node-Buster</a> is absolutely a working name. I haven't given any well-due credit to Axshit Khurana for inspiring this, but I figure I'll clean up things like credit due, documentation and licensing when I've actually got a working product. </p>
+
+<p>As it stands, Node-Buster will work - as long as you read the source code and can identify the right command-line arguments. I'm really working on converting it into an app more similar to <a href='https://github.com/yeoman/yo' >Yo</a>, but for now I'm proud I can make it do anything. I haven't done much with Node, so this is a fun way to sharpen up my Javascript ability.</p>
+
+<h4 id="wheretonext">Where to next?</h4>
+
+<p>I'd really love to be skilled enough to integrate a static-page generation app into Ghost. I know Ghost is still young and I can't be the first person to think of this, so someone has probably already beaten me to that punch. I also know there are a ton of task runner and event-listener programs out that there that could just listen for new posts on my Ghost blog and automatically run everything I need to generate my pages on GitHub. It's definitely something I'd like to try, though, if only for the experience of following through on it. </p>
+
+<p>I'm learning a little more every day. I'm working hard to motivate myself with small projects that challenge me. I'm enjoying my renewed focus on the dev world. </p>]]></description><link>http://blog.atmartin.io/we-need-blog-posts-static/</link><guid isPermaLink="false">7a61a9e5-7b6c-467f-97e3-40cac7d64878</guid><dc:creator><![CDATA[Alex Martin]]></dc:creator><pubDate>Sat, 18 Oct 2014 20:37:21 GMT</pubDate></item><item><title><![CDATA[Homebrew & your PATH]]></title><description><![CDATA[<p><em>This is an addendum to my <a href="">previous post</a> addressing the most common error I see with new <a href='http://brew.sh/' >Homebrew</a> installations.</em></p>
 
 <p>Try something with me: type <code>echo $PATH</code> into your terminal and press enter. See all that mess that comes out? That's your <code>PATH</code>: a list of directories that your terminal expects to contain any command you might ever use. If you're a more file-oriented person, you can find your operating system's default PATH implementation by opening <code>/etc/paths</code> with your favorite text editor (careful - don't edit it!). </p>
 
