@@ -5,7 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-    <title>Overthinking It</title>
+    <title>Hello, Ghostium!</title>
 
     <meta name="HandheldFriendly" content="True">
     <meta name="MobileOptimized" content="320">
@@ -16,11 +16,11 @@
     <meta name="description" content="">
 
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Overthinking It">
+    <meta name="twitter:title" content="Hello, Ghostium!">
     <meta name="twitter:description" content="">
 
     <meta property="og:type" content="article">
-    <meta property="og:title" content="Overthinking It">
+    <meta property="og:title" content="Hello, Ghostium!">
     <meta property="og:description" content="">
 
     <meta name="twitter:site" content="@ADotMartin">
@@ -68,7 +68,7 @@
 
     <meta name="generator" content="Ghost 0.5" />
 <link rel="alternate" type="application/rss+xml" title="Constant Growth" href="../rss/index.html">
-<link rel="canonical" href="http://blog.atmartin.io/overthinking-it/" />
+<link rel="canonical" href="http://blog.atmartin.io/hello-ghostium/" />
   </head>
   <body class="post-template">
 
@@ -119,15 +119,15 @@
           <header class="post-header">
             <ul class="post-meta-list">
               <li class="post-meta-item">
-                <time datetime="2014-10-18" itemprop="datePublished">
-                  2 days ago
+                <time datetime="2014-10-20" itemprop="datePublished">
+                  a few seconds ago
                 </time>
               </li>
               <li class="post-meta-item">
-                <a href="index.html#disqus_thread" data-disqus-identifier="7">Comments</a>
+                <a href="index.html#disqus_thread" data-disqus-identifier="9">Comments</a>
               </li>
             </ul>
-            <h1 itemprop="name headline" class="post-title"><a href="index.html" itemprop="url" data-pjax title="Overthinking It">Overthinking It</a></h1>
+            <h1 itemprop="name headline" class="post-title"><a href="index.html" itemprop="url" data-pjax title="Hello, Ghostium!">Hello, Ghostium!</a></h1>
             <!--h2 itemprop="about" class="post-subtitle"></h2-->
           </header>
           <aside class="post-side">
@@ -144,31 +144,31 @@
             </div>
           </aside>
           <div itemprop="articleBody" class="post-body">
-            <p><em>I have a bit of a problem with overthinking my problems.</em></p>
+            <p>I stumbled on a great new theme for my blog:  <a href="https://github.com/oswaldoacauan/ghostium">Ghostium</a>! A big thank you to <a href="https://github.com/oswaldoacauan">Oswaldo Acauan</a> for developing and maintaining it. </p>
 
-<p>I've been working on <a href="https://github.com/ATMartin/node-buster">Node-Buster</a> for a week or so now, and I found an elegant fix today I'm particularly proud/embarassed to share. </p>
+<p>I had one small bug in converting Ghostium with my static generator. In the sidebar, on my blog pages, the "Home" link routed back to the page you're currently on instead of back to the blog's homepage. I was able to track the issue back to <code>navigation.hbs</code>, one of the config files located in <code>ghost/content/themes/ghostium/partials/custom</code>. </p>
 
-<p>I want to be able to save sites/blogs/repositories in the app. Obviously I'm violating the good ol' <a href="http://c2.com/cgi/wiki?YouArentGonnaNeedIt">YAGNI</a> principle here, but it's a feature I'd really like, and it's my app. Obviously, to persist these repos between app launches I'm going to need a datastore. Here's where my issue comes in: I think waaay too big. </p>
+<p>By default, Ghostium sets your home link on each page like so:  </p>
 
-<p>I first started with SQL. I thought about getting Postgres running, but decided that a full-fledged DBMS would definitely be too large for this project. So then I moved to SQLite. I like SQLite and have used it in the past for small PHP test projects, but I've never used it on anything I'd actually put into production. I spent a couple days researching SQLite &amp; NodeJS interaction layers and found quite a few appealing ones. However, after those couple days I decided SQLite was more work than I wanted to put into this and I dropped it in favor of my next idea: YAML. </p>
+<pre><code>&lt;a href="/" data-pjax&gt;  
+    &lt;i class="fa fa-home"&gt;&lt;/i&gt;Home
+&lt;/a&gt;  
+</code></pre>
 
-<p>I haven't done a lot with <a href="http://www.yaml.org/">YAML</a>, but I edited the occasional Minecraft data file using YAML and though it might be a simple way to store a persistent backend for my app. I found a great interaction layer for Node (<a href="https://github.com/jeremyfa/yaml.js">yaml.js</a>) and got it hammered into Node-Buster. Everything was going great - I had overcome the issue and felt like a true problem solver! </p>
+<p>This works fine for a live site, but when your static generator runs it interprets "/" as "current directory" instead of "site root directory", leading to the home link being rerouted to the current page. </p>
 
-<p>It was over a day later when I realized my oversight. Let's see if you can spot it: </p>
+<p>The fix is super-simple: replace <code>"/"</code> with <code>"{{@blog.url}}"</code>. Your new code will look like this:  </p>
 
-<p>My workflow in the app is to store repos as Javascript objects inside an array. All editing and changes are made to the array in memory while the app runs. When changes are done, the app converts the JS object into Yaml, then writes it out to a .yaml file. When the app reopens and a request is made using the stored data, the app reads the .yaml file, converts it to a JS object, and loads it into a variable so it can be worked with. Rinse, repeat, ad nauseum. </p>
+<pre><code>&lt;a href="{{@blog.url}}" data-pjax&gt;  
+    &lt;i class="fa fa-home"&gt;&lt;/i&gt;Home
+&lt;/a&gt;  
+</code></pre>
 
-<p>See the issue here? I don't need Yaml. Javascript / Node provides a fantastic way to write out Javascript objects without any intermediary formatting or conversions. </p>
+<p>This is around line 29 in my <code>navigation.hbs</code>. The variable <code>@blog.url</code> relies on the site url set in your <code>config.js</code>, so make sure you've set that up before trying this! </p>
 
-<p><strong>It's called JSON.</strong></p>
+<p>With this fix in place I can deploy direct from a live instance to my <code>gh-pages</code> branch and see almost instant service to my custom domain.</p>
 
-<p>I can write my objects directly out the .json files using Node's built-in JSON library. I can read/write files using Node's built-in FileSystem library. I don't need Yaml at all. It's just a middle-man that makes me feel like I'm doing things the "right" way. </p>
-
-<p>Whoops! </p>
-
-<p>I both love and hate the feeling I get when I face challenges like this. On one hand, I'm my greatest critic. I belittle myself for missing something that seems so obvious in retrospect, and that belittleing can often lead me to abandon a small project altogether because I come face to face with my own <a href="http://en.wikipedia.org/wiki/Impostor_syndrome">Impostor Syndrome</a>. On the other hand, it's incredibly rewarding to find a simpler solution to an issue, and it makes me feel good that I'm getting advanced enough to see these kinds of mistakes. I know about myself that I tend to overthink things, but knowing is only half the battle - the other half is being aware of it and correcting it ahead of time. I tend to lose that second half. </p>
-
-<p>Here's to hoping that sharing can help me get a little better about it.</p>
+<h4 id="hooraydigitaloceanhooraynitrousiohooraynodejs">Hooray, DigitalOcean! Hooray, Nitrous.IO! Hooray, NodeJs!</h4>
           </div>
           <footer class="post-footer">
             <div itemprop="author" itemscope itemtype="http://schema.org/Person" class="post-author">
@@ -184,7 +184,7 @@
                   <p class="post-author-location">US</p>
                 <p class="post-info">
                   <b class="post-info-title">Published on</b>
-                  <time class="post-date">October 18, 2014</time>
+                  <time class="post-date">October 20, 2014</time>
                 </p>
               </div>
             </div>
@@ -211,7 +211,7 @@
 
 <script type="text/javascript">
   if(GHOSTIUM.haveDisqus) {
-    var disqus_identifier = '7';
+    var disqus_identifier = '9';
 
     if(typeof DISQUS !== 'object') {
       (function () {

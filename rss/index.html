@@ -1,7 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Constant Growth]]></title><description><![CDATA[Digital Adventures]]></description><link>http://blog.atmartin.io/</link><generator>Ghost 0.5</generator><lastBuildDate>Mon, 20 Oct 2014 14:23:53 GMT</lastBuildDate><atom:link href="http://blog.atmartin.io/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Overthinking It]]></title><description><![CDATA[<p><em>I have a bit of a problem with overthinking my problems.</em></p>
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Constant Growth]]></title><description><![CDATA[Digital Adventures]]></description><link>http://blog.atmartin.io/</link><generator>Ghost 0.5</generator><lastBuildDate>Mon, 20 Oct 2014 14:41:10 GMT</lastBuildDate><atom:link href="http://blog.atmartin.io/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Hello, Ghostium!]]></title><description><![CDATA[<p>I stumbled on a great new theme for my blog:  <a href='https://github.com/oswaldoacauan/ghostium' >Ghostium</a>! A big thank you to <a href='https://github.com/oswaldoacauan' >Oswaldo Acauan</a> for developing and maintaining it. </p>
 
-<p>I've been working on <a href='https://github.com/ATMartin/node-buster' >Node-Buster</a> for a week or so now, and I found an elegant fix togday I'm particularly proud/embarassed to share. </p>
+<p>I had one small bug in converting Ghostium with my static generator. In the sidebar, on my blog pages, the "Home" link routed back to the page you're currently on instead of back to the blog's homepage. I was able to track the issue back to <code>navigation.hbs</code>, one of the config files located in <code>ghost/content/themes/ghostium/partials/custom</code>. </p>
+
+<p>By default, Ghostium sets your home link on each page like so:  </p>
+
+<pre><code>&lt;a href='http://blog.atmartin.io/'  data-pjax&gt;  
+    &lt;i class="fa fa-home"&gt;&lt;/i&gt;Home
+&lt;/a&gt;  
+</code></pre>
+
+<p>This works fine for a live site, but when your static generator runs it interprets "/" as "current directory" instead of "site root directory", leading to the home link being rerouted to the current page. </p>
+
+<p>The fix is super-simple: replace <code>"/"</code> with <code>"{{@blog.url}}"</code>. Your new code will look like this:  </p>
+
+<pre><code>&lt;a href="{{@blog.url}}" data-pjax&gt;  
+    &lt;i class="fa fa-home"&gt;&lt;/i&gt;Home
+&lt;/a&gt;  
+</code></pre>
+
+<p>This is around line 29 in my <code>navigation.hbs</code>. The variable <code>@blog.url</code> relies on the site url set in your <code>config.js</code>, so make sure you've set that up before trying this! </p>
+
+<p>With this fix in place I can deploy direct from a live instance to my <code>gh-pages</code> branch and see almost instant service to my custom domain.</p>
+
+<h4 id="hooraydigitaloceanhooraynitrousiohooraynodejs">Hooray, DigitalOcean! Hooray, Nitrous.IO! Hooray, NodeJs!</h4>]]></description><link>http://blog.atmartin.io/hello-ghostium/</link><guid isPermaLink="false">2b99e486-ceb3-4d20-b153-21842e8a70f8</guid><dc:creator><![CDATA[Alex Martin]]></dc:creator><pubDate>Mon, 20 Oct 2014 14:41:01 GMT</pubDate></item><item><title><![CDATA[Overthinking It]]></title><description><![CDATA[<p><em>I have a bit of a problem with overthinking my problems.</em></p>
+
+<p>I've been working on <a href='https://github.com/ATMartin/node-buster' >Node-Buster</a> for a week or so now, and I found an elegant fix today I'm particularly proud/embarassed to share. </p>
 
 <p>I want to be able to save sites/blogs/repositories in the app. Obviously I'm violating the good ol' <a href='http://c2.com/cgi/wiki?YouArentGonnaNeedIt' >YAGNI</a> principle here, but it's a feature I'd really like, and it's my app. Obviously, to persist these repos between app launches I'm going to need a datastore. Here's where my issue comes in: I think waaay too big. </p>
 
