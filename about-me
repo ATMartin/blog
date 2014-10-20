@@ -5,7 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-    <title>Homebrew &amp; your PATH</title>
+    <title>About Me</title>
 
     <meta name="HandheldFriendly" content="True">
     <meta name="MobileOptimized" content="320">
@@ -16,11 +16,11 @@
     <meta name="description" content="">
 
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Homebrew &amp; your PATH">
+    <meta name="twitter:title" content="About Me">
     <meta name="twitter:description" content="">
 
     <meta property="og:type" content="article">
-    <meta property="og:title" content="Homebrew &amp; your PATH">
+    <meta property="og:title" content="About Me">
     <meta property="og:description" content="">
 
     <meta name="twitter:site" content="@ADotMartin">
@@ -31,13 +31,13 @@
     
     <meta property="fb:admins" content="">
 
-    <link href="../favicon.ico" rel="shortcut icon" type="image/x-icon">
-    <link href="../apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    <link href="favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="apple-touch-icon-precomposed.png" rel="apple-touch-icon">
 
     <link href="http://fonts.googleapis.com/" rel="dns-prefetch">
     <link href="http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic|Open+Sans:700,400&amp;subset=latin,latin-ext" rel="stylesheet">
 
-    <link rel="stylesheet" href="../assets/css/main.min.css?v=6a99c6c442"/>
+    <link rel="stylesheet" href="assets/css/main.min.css?v=6a99c6c442"/>
 
     <script type="text/javascript">
       var ga_ua = 'UA-XXXXX-X';
@@ -64,13 +64,13 @@
       GHOSTIUM.enablePjax = typeof enable_pjax !== 'undefined' ? enable_pjax : true;
     </script>
 
-    <script src="../assets/js/head-scripts.min.js?v=6a99c6c442"></script>
+    <script src="assets/js/head-scripts.min.js?v=6a99c6c442"></script>
 
     <meta name="generator" content="Ghost 0.5" />
-<link rel="alternate" type="application/rss+xml" title="Constant Growth" href="../rss/index.html">
-<link rel="canonical" href="http://blog.atmartin.io/homebrew-and-your-path/" />
+<link rel="alternate" type="application/rss+xml" title="Constant Growth" href="rss/index.html">
+<link rel="canonical" href="http://blog.atmartin.io/about-me/" />
   </head>
-  <body class="post-template">
+  <body class="post-template page">
 
     <button data-action="open-drawer" id="drawer-button" class="drawer-button"><i class="fa fa-bars"></i></button>
     <nav tabindex="-1" class="drawer">
@@ -84,7 +84,7 @@
             </a>
           </li>
           <li class="drawer-list-item">
-            <a href="../about-me" data-pjax>
+            <a href="about-me" data-pjax>
               <i class="fa fa-child"></i>About Me
             </a>
           </li>
@@ -119,29 +119,19 @@
             
 <section class="wrapper wrapper-post">
   <div class="wrapper-container">
-    <article itemscope itemtype="http://schema.org/BlogPosting" role="article" class="post post">
+    <article itemscope itemtype="http://schema.org/BlogPosting" role="article" class="post post page">
         <section class="post-container">
           <header class="post-header">
-            <ul class="post-meta-list">
-              <li class="post-meta-item">
-                <time datetime="2014-10-09" itemprop="datePublished">
-                  12 days ago
-                </time>
-              </li>
-              <li class="post-meta-item">
-                <a href="index.html#disqus_thread" data-disqus-identifier="8">Comments</a>
-              </li>
-            </ul>
-            <h1 itemprop="name headline" class="post-title"><a href="index.html" itemprop="url" data-pjax title="Homebrew &amp; your PATH">Homebrew &amp; your PATH</a></h1>
+            <h1 itemprop="name headline" class="post-title"><a href="about-me" itemprop="url" data-pjax title="About Me">About Me</a></h1>
             <!--h2 itemprop="about" class="post-subtitle"></h2-->
           </header>
           <aside class="post-side">
             <div class="post-author">
-                <a href="index.html" class="post-author-avatar">
+                <a href="about-me" class="post-author-avatar">
                   <img src="http://www.gravatar.com/avatar/069ec845bb230e1f3da804446fd52806?d=404&amp;s=250" alt="Alex Martin">
                 </a>
               <div class="post-author-info">
-                <a href="index.html" class="post-author-name">
+                <a href="about-me" class="post-author-name">
                   Alex Martin
                 </a>
                 <p class="post-author-bio"></p>
@@ -149,63 +139,33 @@
             </div>
           </aside>
           <div itemprop="articleBody" class="post-body">
-            <p><em>This is an addendum to my <a href="../engines-ready-0-to-dev-on-osx-10-9-mavericks/index.html">previous post</a> addressing the most common error I see with new <a href="http://brew.sh">Homebrew</a> installations.</em></p>
+            <hr />
 
-<p>Try something with me: type <code>echo $PATH</code> into your terminal and press enter. See all that mess that comes out? That's your <code>PATH</code>: a list of directories that your terminal expects to contain any command you might ever use. If you're a more file-oriented person, you can find your operating system's default PATH implementation by opening <code>/etc/paths</code> with your favorite text editor (careful - don't edit it!). </p>
+<h3 id="hi">Hi!</h3>
 
-<p>When you submit a command, say <code>git --version</code>, your computer searches each of those directories in the order they're listed until it finds a program called <code>git</code>. It then asks <code>git</code> what to do with <code>--version</code>. <code>git</code> will take whatever it's handed by the OS, process it, and return its output to your terminal for you to do with as you please.</p>
-
-<p>This can cause an issue when you have multiple versions of software on your system. Imagine you have two versions of Git and your PATH looks like this: <code>/old/git:/new/git</code>. No matter how often you update that <code>/new/git</code>, the <code>/old/git</code> will always be used since it shows up first. </p>
-
-<p>The common way to fix this is by appending newer directories to the front of your PATH, like this:  </p>
-
-<pre><code>    export PATH="/new/dir/route:$PATH"
-</code></pre>
-
-<p>This sets your PATH as equal to the new directory followed by your original PATH list. </p>
-
-<p>The first time you run <code>brew doctor</code>, you'll probably see an error regarding <code>/usr/bin</code> &amp; your PATH. If you see this error, run the following command in your terminal:  </p>
-
-<pre><code>    'export PATH="/usr/local/bin:$PATH"' &gt;&gt; ~/.bash_profile &amp;&amp; source ~/.bash_profile
-</code></pre>
-
-<p>This will ensure your terminal checks Homebrew's installed &amp; updated apps before it checks an older &amp; possibly outdated folder. </p>
-
-<p>This directive is written to the <code>.bash_profile</code> file in your home directory. If you need to remove it later, open <code>~/.bash_profile</code> and delete the command. <strong>Do be careful</strong> - your profile will probably contain lots of other nuts &amp; bolts and if you're using this tutorial you may not yet know what it all means. </p>
-
-<p><em>If you're a purist regarding your PATH, or if you need support for the older XCode versions of certain programs, take a look at <a href="http://superuser.com/questions/324616/how-should-i-set-the-path-variable-on-my-mac-so-the-hombrew-installed-tools-are/580611#580611">this answer on SuperUser</a>. This is a much more complicated solution than I need, but it may help you if defaulting to Homebrew's versions causes issues on your system.</em></p>
-
-<h4 id="letmeknowifthisdoesnthelpclearupyourpathwarningsadotmartinhttpstwittercomadotmartin">Let me know if this doesn't help clear up your PATH warnings! <a href="https://twitter.com/ADotMartin">@ADotMartin</a></h4>
+<p>This page is all about me. There's not much here at the moment. Hold on - we'll be with you shortly!</p>
           </div>
           <footer class="post-footer">
             <div itemprop="author" itemscope itemtype="http://schema.org/Person" class="post-author">
-                <a href="index.html" class="post-author-avatar">
+                <a href="about-me" class="post-author-avatar">
                   <img itemprop="image" src="http://www.gravatar.com/avatar/069ec845bb230e1f3da804446fd52806?d=404&amp;s=250" alt="Alex Martin">
                 </a>
               <div class="post-author-info">
                 <h4 class="post-footer-heading">Written By</h4>
-                <a href="index.html" itemprop="url" class="post-author-name">
+                <a href="about-me" itemprop="url" class="post-author-name">
                   <span itemprop="name">Alex Martin</span>
                 </a>
                 <p itemprop="description" class="post-author-bio"></p>
-                  <p class="post-author-location">US</p>
-                <p class="post-info">
-                  <b class="post-info-title">Published on</b>
-                  <time class="post-date">October 09, 2014</time>
-                </p>
               </div>
             </div>
             <div class="post-social">
               <h4 class="post-footer-heading">Spread the word</h4>
-              <a href="index.html#" data-action="share-twitter"><i class="fa fa-fw fa-lg fa-twitter"></i></a>
-              <a href="index.html#" data-action="share-facebook"><i class="fa fa-fw fa-lg fa-facebook"></i></a>
-              <a href="index.html#" data-action="share-gplus"><i class="fa fa-fw fa-lg fa-google-plus"></i></a>
+              <a href="about-me#" data-action="share-twitter"><i class="fa fa-fw fa-lg fa-twitter"></i></a>
+              <a href="about-me#" data-action="share-facebook"><i class="fa fa-fw fa-lg fa-facebook"></i></a>
+              <a href="about-me#" data-action="share-gplus"><i class="fa fa-fw fa-lg fa-google-plus"></i></a>
             </div>
           </footer>
         </section>
-      <section itemprop="comment" class="post-comments">
-        <div id="disqus_thread"></div>
-      </section>
     </article>
 
     <footer role="contentinfo" class="footer">
@@ -216,31 +176,14 @@
   </div>
 </section>
 
-<script type="text/javascript">
-  if(GHOSTIUM.haveDisqus) {
-    var disqus_identifier = '8';
-
-    if(typeof DISQUS !== 'object') {
-      (function () {
-      var s = document.createElement('script'); s.async = true;
-      s.type = 'text/javascript';
-      s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-      (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
-      }());
-    }
-  } else {
-    document.querySelector('.post-comments').remove();
-  }
-</script>
-
           </div>
         </div>
       </div>
     </main>
 
-    <script src="../public/jquery.min.js?v=6a99c6c442"></script>
+    <script src="public/jquery.min.js?v=6a99c6c442"></script>
 
-    <script src="../assets/js/foot-scripts.min.js?v=6a99c6c442"></script>
+    <script src="assets/js/foot-scripts.min.js?v=6a99c6c442"></script>
 
     <script type="text/javascript">
 
